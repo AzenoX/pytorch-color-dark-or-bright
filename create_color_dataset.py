@@ -1,11 +1,22 @@
-import pandas as pd
+"""
+This script generates a dataset of unique random colors, checks if each color is considered dark
+based on its luminance, and saves the resulting dataset to an Excel file named 'colors.xlsx'.
+"""
+
 import random
+import pandas as pd
 import progressbar
 
 
-# Function to determine if a color is dark
-def is_dark_color(r, g, b):
-    luminance = (0.299 * r + 0.587 * g + 0.114 * b)
+def is_dark_color(red: object, green: object, blue: object) -> int:
+    """
+    :rtype: int
+    :param red:
+    :param green:
+    :param blue:
+    :return:
+    """
+    luminance = 0.299 * red + 0.587 * green + 0.114 * blue
     if luminance < 128:  # This threshold can be adjusted
         return 1
     return 0
@@ -22,8 +33,8 @@ for i in progressbar.progressbar(range(1000000)):
 
     if (r, g, b) not in colors:  # Ensure unique colors
         colors.add((r, g, b))
-        is_dark = is_dark_color(r, g, b)
-        data.append([is_dark, r, g, b])
+        IS_DARK = is_dark_color(r, g, b)
+        data.append([IS_DARK, r, g, b])
 
 # Convert to DataFrame
 df = pd.DataFrame(data, columns=['is_dark', 'red', 'green', 'blue'])

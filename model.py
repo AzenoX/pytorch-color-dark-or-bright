@@ -1,19 +1,17 @@
+"""
+Use this file to use the trained model
+"""
+
 import os
 import sys
 import torch
 from torch import nn
-from pathlib import Path
+from utils import get_model_path, get_truth_table
 
 # Model Path
-MODEL_PATH = Path("models")
-MODEL_PATH.mkdir(parents=True, exist_ok=True)
-MODEL_NAME = "model_colors.pt"
-MODEL_SAVE_PATH = MODEL_PATH / MODEL_NAME
+MODEL_SAVE_PATH = get_model_path()
 
-TRUTH_TABLE = {
-    0: 'Bright',
-    1: 'Dark'
-}
+TRUTH_TABLE = get_truth_table()
 
 if __name__ == '__main__':
     if os.path.isfile(MODEL_SAVE_PATH):  # If the model already exists, then load it's dict
@@ -39,8 +37,9 @@ if __name__ == '__main__':
                 y_pred = torch.round(torch.sigmoid(y_logits))
 
                 # Finally print the result
-                print("Determining if a color is bright or dark is subjective. The model is based on the luminance "
-                      "equation (0.299 * R + 0.587 * G + 0.114 * B), with a threshold of 128.")
+                print("Determining if a color is bright or dark is subjective."
+                      "The model is based on the luminance equation "
+                      "(0.299 * R + 0.587 * G + 0.114 * B), with a threshold of 128.")
                 print(f"The color {red}, {green}, {blue} is {TRUTH_TABLE[y_pred.item()]}")
     else:
         print('You need to have a model first (run: `python main.py`)')
