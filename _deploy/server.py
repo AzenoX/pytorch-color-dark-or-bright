@@ -1,3 +1,7 @@
+"""
+Server file
+"""
+
 from flask import Flask, request, jsonify
 import torch
 from torch import nn
@@ -19,16 +23,19 @@ model.eval()
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    """
+    Predict the color
+    """
     data = request.json
     red = data.get('red', 0)
     green = data.get('green', 0)
     blue = data.get('blue', 0)
 
-    X = torch.tensor([[red, green, blue]], dtype=torch.float32)
-    X = X / 255
+    x = torch.tensor([[red, green, blue]], dtype=torch.float32)
+    x = x / 255
 
     with torch.inference_mode():
-        y_logits = model(X)
+        y_logits = model(x)
         y_pred = torch.round(torch.sigmoid(y_logits))
 
     return jsonify({
